@@ -11,8 +11,8 @@ class TestUser:
             "name": random_name()
         }
         response = requests.patch(USER_URL, json=updated_user, headers=headers)
-        assert response.status_code == 403 # не верный код ошибки
-        assert response.json()["success"] == False
+        assert response.status_code == 200
+        assert response.json()["success"] == True
 
     # Тест обновления данных пользователя без авторизации
     def test_update_user_without_auth(self):

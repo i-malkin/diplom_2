@@ -2,12 +2,24 @@ import pytest
 import requests
 import random
 import string
-from data import REGISTER_URL, LOGIN_URL, AUTH_TOKEN, BASE_URL
+from data import BASE_URL, REGISTER_URL, LOGIN_URL
+
+def get_tokens(email, password):
+    response = requests.post(LOGIN_URL, json={"email": email, "password": password})
+    response.raise_for_status()
+    data = response.json()
+    return data["accessToken"], data["refreshToken"]
+
+def get_auth_headers(email, password):
+    access_token, _ = get_tokens(email, password)
+    return {
+        "Authorization": access_token
+    }
 
 # Фикстура для получения базового URL
 @pytest.fixture(scope="session")
 def base_url():
-    return "https://stellarburgers.nomoreparties.site/api"
+    return BASE_URL
 
 # Функция для генерации случайного email
 def random_email():
@@ -27,22 +39,32 @@ def unique_user():
     }
     return user
 
+def ensure_user_exists(user):
+    try:
+        get_tokens(user["email"], user["password"])
+    except requests.exceptions.HTTPError:
+        response = requests.post(REGISTER_URL, json=user)
+        assert response.status_code == 200, f"Failed to register user: {response.status_code} {response.text}"
+
 # Фикстура для использования зарегистрированного пользователя
 @pytest.fixture(scope="function")
 def existing_user():
     user = {
-        "email": "test_kogorta_7@ya.ru",
+        "email": "malkin_kogorta_7@ya.ru",
         "password": "123456",
-        "name": "test_kogorta_7"
+        "name": "malkin_kogorta_7"
     }
+    ensure_user_exists(user)
     return user
 
 # Фикстура для получения заголовков с токеном аутентификации
 @pytest.fixture(scope="function")
-def headers():
-    return {
-        "Authorization": AUTH_TOKEN
-    }
+def headers(existing_user):
+    try:
+        return get_auth_headers(existing_user["email"], existing_user["password"])
+    except requests.exceptions.HTTPError as e:
+        print(f"Error obtaining auth headers: {e}")
+        raise
 
 # Фикстура для получения списка ингредиентов
 @pytest.fixture(scope="function")

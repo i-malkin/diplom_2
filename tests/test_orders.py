@@ -3,9 +3,10 @@ import requests
 from data import ORDER_URL
 
 class TestOrders:
+
     def test_create_order_with_auth(self, headers, ingredients):
         order = {
-            "ingredients": [ingredients[0]]
+            "ingredients": ingredients
         }
         response = requests.post(ORDER_URL, json=order, headers=headers)
         assert response.status_code == 200
@@ -13,14 +14,13 @@ class TestOrders:
 
     def test_create_order_without_auth(self, ingredients):
         order = {
-            "ingredients": [ingredients[0]]
+            "ingredients": ingredients
         }
         response = requests.post(ORDER_URL, json=order)
-        # Ожидается успешный ответ, так как авторизация не требуется
-        assert response.status_code == 200
-        assert response.json().get("success") == True
+        assert response.status_code == 401 # баг в требованиях, сказано что не авторизованный не может создать заказ
+        assert response.json().get("message") == "You should be authorised"
 
-    def test_create_order_no_ingredients(self, headers):
+    def test_create_order_empty(self, headers):
         order = {
             "ingredients": []
         }
