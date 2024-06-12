@@ -1,7 +1,7 @@
 import pytest
 import requests
 import allure
-from data import ORDER_URL
+from data import ORDER_URL, ANSWERS_1, ANSWERS_2
 
 class TestOrders:
 
@@ -25,7 +25,7 @@ class TestOrders:
         }
         response = requests.post(ORDER_URL, json=order)
         assert response.status_code == 401   # баг в документации - не авторизованный не может создать заказа, может.
-        assert response.json().get("message") == "You should be authorised"
+        assert response.json().get("message") == ANSWERS_1
 
     @allure.story('Создание пустого заказа')
     @allure.title("Проверка создания пустого заказа")
@@ -36,7 +36,7 @@ class TestOrders:
         }
         response = requests.post(ORDER_URL, json=order, headers=headers)
         assert response.status_code == 400
-        assert response.json().get("message") == "Ingredient ids must be provided"
+        assert response.json().get("message") == ANSWERS_2
 
     @allure.story('Создание заказа с невалидным ингредиентом')
     @allure.title("Проверка создания заказа с невалидным ингредиентом")
