@@ -6,10 +6,10 @@ from data import BASE_URL, REGISTER_URL, LOGIN_URL
 from auth import get_auth_headers, get_tokens #добавил
 
 
-# Фикстура для получения базового URL
-@pytest.fixture(scope="session")
-def base_url():
-    return BASE_URL
+# # Фикстура для получения базового URL
+# @pytest.fixture(scope="session")
+# def base_url():
+#     return BASE_URL
 
 # Функция для генерации случайного email
 def random_email():
