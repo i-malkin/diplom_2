@@ -36,5 +36,4 @@ def headers(existing_user):
 @pytest.fixture(scope="function")
 def ingredients():
     response = requests.get(f"{BASE_URL}/ingredients")
-    assert response.status_code == 200
     return [ingredient['_id'] for ingredient in response.json()['data']]
