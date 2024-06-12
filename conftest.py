@@ -29,11 +29,8 @@ def existing_user():
 # Фикстура для получения заголовков с токеном аутентификации
 @pytest.fixture(scope="function")
 def headers(existing_user):
-    try:
-        return get_auth_headers(existing_user["email"], existing_user["password"])
-    except requests.exceptions.HTTPError as e:
-        print(f"Error obtaining auth headers: {e}")
-        raise
+    return get_auth_headers(existing_user["email"], existing_user["password"])
+
 
 # Фикстура для получения списка ингредиентов
 @pytest.fixture(scope="function")
