@@ -7,5 +7,4 @@ LOGIN_URL = f"{BASE_URL}/auth/login"
 USER_URL = f"{BASE_URL}/auth/user"
 ORDER_URL = f"{BASE_URL}/orders"
 
-# Dummy token for example purposes (replace with actual logic if needed)
-AUTH_TOKEN = "Bearer your_access_token_here"
+
