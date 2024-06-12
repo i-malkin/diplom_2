@@ -3,18 +3,8 @@ import requests
 import random
 import string
 from data import BASE_URL, REGISTER_URL, LOGIN_URL
+from auth import get_auth_headers, get_tokens #добавил
 
-def get_tokens(email, password):
-    response = requests.post(LOGIN_URL, json={"email": email, "password": password})
-    response.raise_for_status()
-    data = response.json()
-    return data["accessToken"], data["refreshToken"]
-
-def get_auth_headers(email, password):
-    access_token, _ = get_tokens(email, password)
-    return {
-        "Authorization": access_token
-    }
 
 # Фикстура для получения базового URL
 @pytest.fixture(scope="session")
